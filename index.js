@@ -54,7 +54,7 @@ async function run() {
         .send({ success: true });
     });
 
-    app.post("/logout", async (req, res) => {
+    app.post("/api/v1/auth/logout", async (req, res) => {
       const user = req.body;
       console.log("logging out", user);
       res
@@ -65,6 +65,24 @@ async function run() {
           sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
         })
         .send({ success: true });
+    });
+
+    app.post("/api/v1/user/saveUser", async (req, res) => {
+      const user = req.body;
+      const query = { email: user.email };
+      const existingUser = await userCollection.findOne(query);
+      if (existingUser) {
+        return res.send({ message: "user already exists", insertedId: null });
+      }
+
+      const userInfo = {
+        email: user.email,
+        role: "user",
+      };
+
+      const result = await userCollection.insertOne(userInfo);
+
+      res.send(result);
     });
 
     // Send a ping to confirm a successful connection
