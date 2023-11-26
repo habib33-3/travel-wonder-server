@@ -195,6 +195,27 @@ async function run() {
       }
     );
 
+    // update user to guide
+    app.patch(
+      "/api/v1/users/makeGuide/:id",
+      verifyToken,
+      verifyAdmin,
+      async (req, res) => {
+        const id = req.params.id;
+        const filter = { _id: new ObjectId(id) };
+
+        const updatedRole = {
+          $set: {
+            role: "guide",
+          },
+        };
+
+        const result = await userCollection.updateOne(filter, updatedRole);
+
+        res.send(result);
+      }
+    );
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
