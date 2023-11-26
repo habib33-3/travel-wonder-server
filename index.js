@@ -4,6 +4,7 @@ import morgan from "morgan";
 import "dotenv/config";
 import { MongoClient, ServerApiVersion } from "mongodb";
 import jwt from "jsonwebtoken";
+import cookieParser from "cookie-parser";
 
 const port = process.env.PORT || 5000;
 
@@ -19,6 +20,7 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(cookieParser());
 app.use(morgan("dev"));
 
 app.get("/", (req, res) => {
@@ -45,13 +47,18 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
 
+    // db related
     const database = client.db("travelWonderDB");
     const userCollection = database.collection("users");
 
+    // middlewares
+
+    // verify Token
     const verifyToken = (req, res, next) => {
       const token = req?.cookies?.token;
 
       if (!token) {
+        // console.log(process.env.ACCESS_TOKEN)
         return res.status(401).send({ message: "Unauthorized" });
       }
 
@@ -66,6 +73,7 @@ async function run() {
       });
     };
 
+    // verify admin
     const verifyAdmin = async (req, res, next) => {
       const email = req.decoded.email;
       const query = { email: email };
@@ -80,10 +88,13 @@ async function run() {
       next();
     };
 
-    app.get("/user/admin/:email", verifyToken, async (req, res) => {
+    //  api routes
+
+    // check if user is admin
+    app.get("/api/v1/checkAdmin/:email", verifyToken, async (req, res) => {
       const email = req.params.email;
 
-      if (email !== req.decoded.email) {
+      if (email !== req.user.email) {
         return res.status(403).send({ message: "Forbidden" });
       }
 
@@ -91,7 +102,7 @@ async function run() {
 
       const user = await userCollection.findOne(query);
       let admin = false;
-      
+
       if (user) {
         admin = user?.role === "admin";
       }
@@ -99,10 +110,13 @@ async function run() {
       res.send({ admin });
     });
 
+    // auth related API
+
+    // create token when user login
     app.post("/api/v1/auth/createToken", async (req, res) => {
       const user = req.body;
       const token = jwt.sign(user, process.env.ACCESS_TOKEN, {
-        expiresIn: "30d",
+        expiresIn: "3h",
       });
       res
         .cookie("token", token, {
@@ -113,6 +127,7 @@ async function run() {
         .send({ success: true });
     });
 
+    // clear cookies if user logout
     app.post("/api/v1/auth/logout", async (req, res) => {
       const user = req.body;
       console.log("logging out", user);
@@ -126,6 +141,9 @@ async function run() {
         .send({ message: "cookie cleared" });
     });
 
+    // user routes
+
+    /* save user to db*/
     app.post("/api/v1/user/saveUser", async (req, res) => {
       const user = req.body;
       const query = { email: user.email };
