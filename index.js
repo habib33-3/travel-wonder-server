@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import "dotenv/config";
-import { MongoClient, ServerApiVersion } from "mongodb";
+import { MongoClient, ObjectId, ServerApiVersion } from "mongodb";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 
@@ -162,12 +162,34 @@ async function run() {
       res.send(result);
     });
 
+    // Get all user
     app.get(
       "/api/v1/user/getAllUsers",
       verifyToken,
       verifyAdmin,
       async (req, res) => {
         const result = await userCollection.find().toArray();
+
+        res.send(result);
+      }
+    );
+
+    // update user to admin
+    app.patch(
+      "/api/v1/users/makeAdmin/:id",
+      verifyToken,
+      verifyAdmin,
+      async (req, res) => {
+        const id = req.params.id;
+        const filter = { _id: new ObjectId(id) };
+
+        const updatedRole = {
+          $set: {
+            role: "admin",
+          },
+        };
+
+        const result = await userCollection.updateOne(filter, updatedRole);
 
         res.send(result);
       }
