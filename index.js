@@ -51,6 +51,7 @@ async function run() {
     const database = client.db("travelWonderDB");
     const userCollection = database.collection("users");
     const categoriesCollection = database.collection("categories");
+    const toursCollection = database.collection("Tours");
 
     // middlewares
 
@@ -225,6 +226,20 @@ async function run() {
 
       res.send(result);
     });
+
+    // add a package
+    app.post(
+      "/api/v1/packages/addPackage",
+      verifyToken,
+      verifyAdmin,
+      async (req, res) => {
+        const tour = req.body;
+
+        const result = await toursCollection.insertOne(tour);
+
+        res.send(result);
+      }
+    );
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
