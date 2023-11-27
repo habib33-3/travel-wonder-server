@@ -50,6 +50,7 @@ async function run() {
     // db related
     const database = client.db("travelWonderDB");
     const userCollection = database.collection("users");
+    const categoriesCollection = database.collection("categories");
 
     // middlewares
 
@@ -215,6 +216,15 @@ async function run() {
         res.send(result);
       }
     );
+
+    // package related
+
+    // get all categories
+    app.get("/api/v1/packages/getCategories", async (req, res) => {
+      const result = await categoriesCollection.find().toArray();
+
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
