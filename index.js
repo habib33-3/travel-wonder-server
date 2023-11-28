@@ -52,6 +52,7 @@ async function run() {
     const userCollection = database.collection("users");
     const categoriesCollection = database.collection("categories");
     const toursCollection = database.collection("Tours");
+    const guideCollection = database.collection("guide");
 
     // middlewares
 
@@ -266,6 +267,17 @@ async function run() {
     // get all packages
     app.get("/api/v1/packages/getAllPackages", async (req, res) => {
       const result = await toursCollection.find().toArray();
+
+      res.send(result);
+    });
+
+    // guide related api
+
+    // create a guide
+    app.post("/api/v1/guide/saveGuide", verifyToken, async (req, res) => {
+      const guideInfo = req.body;
+
+      const result = await guideCollection.insertOne(guideInfo);
 
       res.send(result);
     });
