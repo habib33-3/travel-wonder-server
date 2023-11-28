@@ -112,6 +112,26 @@ async function run() {
       res.send({ admin });
     });
 
+    // check if guide
+    app.get("/api/v1/checkGuide/:email", verifyToken, async (req, res) => {
+      const email = req.params.email;
+
+      if (email !== req.user.email) {
+        return res.status(403).send({ message: "Forbidden" });
+      }
+
+      const query = { email: email };
+
+      const user = await userCollection.findOne(query);
+      let guide = false;
+
+      if (user) {
+        guide = user?.role === "guide";
+      }
+
+      res.send({ guide });
+    });
+
     // auth related API
 
     // create token when user login
@@ -156,6 +176,8 @@ async function run() {
 
       const userInfo = {
         email: user.email,
+        name: user.displayName,
+        img: user.photoURL,
         role: "user",
       };
 
