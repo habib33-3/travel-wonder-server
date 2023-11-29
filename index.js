@@ -396,6 +396,7 @@ async function run() {
       res.send(result);
     });
 
+    // get wishlists items by user email
     app.get("/api/v1/wishlist/getWishlist", verifyToken, async (req, res) => {
       const email = req.query.email;
 
@@ -405,6 +406,21 @@ async function run() {
 
       res.send(result);
     });
+
+    // delete wishlist item
+    app.delete(
+      "/api/v1/wishlist/deleteItem/:id",
+      verifyToken,
+      async (req, res) => {
+        const id = req.params.id;
+
+        const query = { _id: new ObjectId(id) };
+
+        const result = await wishListCollection.deleteOne(query);
+
+        res.send(result);
+      }
+    );
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
