@@ -326,6 +326,17 @@ async function run() {
       res.send(result);
     });
 
+    // get single booking by guides email
+    app.get("/api/v1/guidesBooking", verifyToken, async (req, res) => {
+      const email = req.query.email;
+
+      const query = { guideEmail: email };
+
+      const result = await bookingCollection.find(query).toArray();
+
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
