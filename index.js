@@ -55,6 +55,7 @@ async function run() {
     const guideCollection = database.collection("guide");
     const reviewCollection = database.collection("review");
     const bookingCollection = database.collection("booking");
+    const wishListCollection = database.collection("wishList");
 
     // middlewares
 
@@ -384,6 +385,16 @@ async function run() {
         res.send(result);
       }
     );
+
+    // wishlist related api
+
+    // add to wishList
+    app.post("/api/v1/wishlist/add", verifyToken, async (req, res) => {
+      const item = req.body;
+      const result = await wishListCollection.insertOne(item);
+
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
