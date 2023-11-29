@@ -53,6 +53,7 @@ async function run() {
     const categoriesCollection = database.collection("categories");
     const toursCollection = database.collection("Tours");
     const guideCollection = database.collection("guide");
+    const reviewCollection = database.collection("review");
 
     // middlewares
 
@@ -277,6 +278,12 @@ async function run() {
     app.post("/api/v1/guide/saveGuide", verifyToken, async (req, res) => {
       const guideInfo = req.body;
 
+      const query = { email: guideInfo.email };
+      const isExists = await guideCollection.findOne(query);
+      if (isExists) {
+        return res.send({ message: "Guide already exists", insertedId: null });
+      }
+
       const result = await guideCollection.insertOne(guideInfo);
 
       res.send(result);
@@ -285,6 +292,17 @@ async function run() {
     // get all guide
     app.get("/api/v1/guides/getAllGuide", async (req, res) => {
       const result = await guideCollection.find().toArray();
+
+      res.send(result);
+    });
+
+    // review related api
+
+    // add new review
+    app.post("/api/v1/review/addReview", verifyToken, async (req, res) => {
+      const review = req.body;
+
+      const result = await reviewCollection.insertOne(review);
 
       res.send(result);
     });
