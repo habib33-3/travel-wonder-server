@@ -360,7 +360,7 @@ async function run() {
     );
 
     // get bookings for user
-    app.get("/api/v1/bookings/userBookings",verifyToken,async (req,res)=>{
+    app.get("/api/v1/bookings/userBookings", verifyToken, async (req, res) => {
       const email = req.query.email;
 
       const query = { touristEmail: email };
@@ -368,7 +368,22 @@ async function run() {
       const result = await bookingCollection.find(query).toArray();
 
       res.send(result);
-    })
+    });
+
+    // cancel booking
+    app.delete(
+      "/api/v1/booking/cancelBooking/:id",
+      verifyToken,
+      async (req, res) => {
+        const id = req.params.id;
+
+        const query = { _id: new ObjectId(id) };
+
+        const result = await bookingCollection.deleteOne(query);
+
+        res.send(result);
+      }
+    );
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
