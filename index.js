@@ -54,6 +54,7 @@ async function run() {
     const toursCollection = database.collection("Tours");
     const guideCollection = database.collection("guide");
     const reviewCollection = database.collection("review");
+    const bookingCollection = database.collection("booking");
 
     // middlewares
 
@@ -303,6 +304,17 @@ async function run() {
       const review = req.body;
 
       const result = await reviewCollection.insertOne(review);
+
+      res.send(result);
+    });
+
+    // booking related api
+
+    // add new booking
+    app.post("/api/v1/booking/addBooking", verifyToken, async (req, res) => {
+      const booking = req.body;
+
+      const result = await bookingCollection.insertOne(booking);
 
       res.send(result);
     });
