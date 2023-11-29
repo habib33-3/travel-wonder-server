@@ -326,7 +326,7 @@ async function run() {
       res.send(result);
     });
 
-    // get single booking by guides email
+    // get all bookings by guides email
     app.get("/api/v1/guidesBooking", verifyToken, async (req, res) => {
       const email = req.query.email;
 
@@ -336,6 +336,28 @@ async function run() {
 
       res.send(result);
     });
+
+    // change booking status by guide
+    app.put(
+      "/api/v1/bookings/changeStatus/:id",
+      verifyToken,
+      async (req, res) => {
+        const status = req.body;
+        console.log(status);
+        const id = req.params.id;
+
+        const filter = { _id: new ObjectId(id) };
+
+        const updatedStatus = {
+          $set: {
+            status: status.status,
+          },
+        };
+        const result = await bookingCollection.updateOne(filter, updatedStatus);
+
+        res.send(result);
+      }
+    );
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
