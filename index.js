@@ -396,6 +396,16 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/api/v1/wishlist/getWishlist", verifyToken, async (req, res) => {
+      const email = req.query.email;
+
+      const query = { email: email };
+
+      const result = await wishListCollection.find(query).toArray();
+
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
