@@ -319,6 +319,13 @@ async function run() {
       res.send(result);
     });
 
+    // get all booking
+    app.get("/api/v1/booking/getAllBooking", verifyToken, async (req, res) => {
+      const result = await bookingCollection.find().toArray();
+
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
