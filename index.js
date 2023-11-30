@@ -56,6 +56,7 @@ async function run() {
     const reviewCollection = database.collection("review");
     const bookingCollection = database.collection("booking");
     const wishListCollection = database.collection("wishList");
+    const blogCollection = database.collection("blog");
 
     // middlewares
 
@@ -421,6 +422,17 @@ async function run() {
         res.send(result);
       }
     );
+
+    // blog related api
+
+    // post a new blog
+    app.post("/api/v1/blog/addBlog", verifyToken, async (req, res) => {
+      const blog = req.body;
+
+      const result = await blogCollection.insertOne(blog);
+
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
