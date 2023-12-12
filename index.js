@@ -310,6 +310,19 @@ async function run() {
       res.send(result);
     });
 
+    // get guides review
+    app.get(
+      "/api/v1/review/getReview/:email",
+      verifyToken,
+      async (req, res) => {
+        const email = req.params.email;
+        const query = { guideEmail: email };
+        const result = await reviewCollection.find(query).toArray();
+
+        res.send(result);
+      }
+    );
+
     // booking related api
 
     // add new booking
