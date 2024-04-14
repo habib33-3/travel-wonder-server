@@ -1,0 +1,6 @@
+
+dist
+.eslintrc.js
+.prettierrc.js
+.env
+node_modules
