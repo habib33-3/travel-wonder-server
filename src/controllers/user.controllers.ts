@@ -29,11 +29,36 @@ export const saveUser = async (
                 message: "User with this email already exists",
             });
         } else {
-            console.error("Error:", error);
+            console.error("error during save user : \n", error);
             res.status(500).json({
                 success: false,
                 message: "Internal server error",
             });
         }
+    }
+};
+
+export const getAllUsers = async (req: Request, res: Response) => {
+    try {
+        const users = await UserModel.find();
+
+        if (!users) {
+            res.status(404).json({
+                success: false,
+                message: "no user found",
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "User loaded",
+            users,
+        });
+    } catch (error) {
+        console.error("error during get all users: \n", error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
     }
 };
