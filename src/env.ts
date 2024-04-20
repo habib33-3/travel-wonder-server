@@ -1,6 +1,10 @@
 import "dotenv/config";
 
-export const port = process.env.PORT;
-export const dbUser = process.env.DB_USER;
-export const dbPass = process.env.DB_PASS;
-export const accessToken = process.env.ACCESS_TOKEN;
+export const {
+    PORT: port = 5000,
+    DB_USER: dbUser = "",
+    DB_PASS: dbPass = "",
+    ACCESS_TOKEN: accessToken = "",
+    DEV_CLIENT: devClient = "",
+    PROD_CLIENT: prodClient = "",
+} = process.env;

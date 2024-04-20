@@ -8,3 +8,6 @@ router.use(userRouter);
 router.get("/api/health", async (_, res) => {
     res.send("server running");
 });
+
+
+export default router
