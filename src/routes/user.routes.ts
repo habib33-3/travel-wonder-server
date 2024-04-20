@@ -13,6 +13,4 @@ router.post(
 
 router.get("/api/v1/user/getAllUsers", getAllUsers);
 
-
-
 export default router;

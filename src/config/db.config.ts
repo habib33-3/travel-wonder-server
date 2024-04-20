@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
 import app from "../app";
-import { dbPass, dbUser } from "../env";
-
-const port = process.env.PORT || 5000;
+import { dbPass, dbUser, port } from "../env";
 
 const dbUrl = `mongodb+srv://${dbUser}:${dbPass}@cluster0.cdjrxf4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
