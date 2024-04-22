@@ -12,3 +12,5 @@ router.get(
 );
 
 router.get("/api/v1/auth/logout", clearToken);
+
+export default router;

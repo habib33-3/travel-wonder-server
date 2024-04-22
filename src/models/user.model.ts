@@ -1,4 +1,13 @@
-import { getModelForClass, prop } from "@typegoose/typegoose";
+import { getModelForClass, modelOptions, prop, Severity } from "@typegoose/typegoose";
+
+@modelOptions({
+    schemaOptions: {
+      timestamps: true,
+    },
+    options: {
+      allowMixed: Severity.ALLOW,
+    },
+  })
 
 export class User {
     @prop({
@@ -6,15 +15,17 @@ export class User {
         required: true,
         unique: true,
     })
-    email: string;
+    email!: string;
 
-    @prop()
-    name: string;
+    @prop({
+        default:""
+    })
+    public name?: string;
 
     @prop({
         default: "https://imgbb.com/HV14rFJ",
     })
-    img: string;
+    img?: string;
 
     @prop({
         default: "user",
