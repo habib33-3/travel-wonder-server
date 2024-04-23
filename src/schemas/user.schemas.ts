@@ -6,9 +6,9 @@ export const saveUserSchema = object({
             required_error: "email is required",
         }).email({ message: "valid email is required" }),
 
-        name: string({}).min(3).max(20),
-        img: string(),
-        role: string({}),
+        name: string({}).min(3).max(20).optional(),
+        img: string().optional(),
+        role: string({}).optional(),
     }),
 });
 

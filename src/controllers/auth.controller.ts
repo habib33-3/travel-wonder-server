@@ -18,20 +18,18 @@ export const createToken = async (
             expiresIn: "3h",
         });
 
-        res.status(200)
-            .json({
-                success: true,
-                token: token,
-            })
+        return res
+            .status(200)
             .cookie("token", token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite:
                     process.env.NODE_ENV === "production" ? "none" : "strict",
-            });
+            })
+            .send("success");
     } catch (error) {
         console.log("error during token create", error);
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: "something went wrong",
         });

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import app from "../app";
 import { dbPass, dbUser, port } from "../env";
 
-const dbUrl = `mongodb+srv://${dbUser}:${dbPass}@cluster0.cdjrxf4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const dbUrl = `mongodb+srv://${dbUser}:${dbPass}@cluster0.cdjrxf4.mongodb.net/travel-wonder?retryWrites=true&w=majority&appName=Cluster0`;
 
 export const connectDB = async () => {
     const connectionInstance = await mongoose.connect(`${dbUrl}`);
