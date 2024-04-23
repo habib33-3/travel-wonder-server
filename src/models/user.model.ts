@@ -1,14 +1,18 @@
-import { getModelForClass, modelOptions, prop, Severity } from "@typegoose/typegoose";
+import {
+    getModelForClass,
+    modelOptions,
+    prop,
+    Severity,
+} from "@typegoose/typegoose";
 
 @modelOptions({
     schemaOptions: {
-      timestamps: true,
+        timestamps: true,
     },
     options: {
-      allowMixed: Severity.ALLOW,
+        allowMixed: Severity.ALLOW,
     },
-  })
-
+})
 export class User {
     @prop({
         lowercase: true,
@@ -17,9 +21,7 @@ export class User {
     })
     email!: string;
 
-    @prop({
-        default:""
-    })
+    @prop({})
     public name?: string;
 
     @prop({
@@ -31,7 +33,7 @@ export class User {
         default: "user",
         enum: ["user", "admin", "guide"],
     })
-    role: "user" | "admin" | "guide";
+    role?: "user" | "admin" | "guide";
 }
 
 const UserModel = getModelForClass(User);
