@@ -1,6 +1,11 @@
 import { Request, Response } from "express";
-import { SaveUserInput } from "../schemas/user.schemas";
+import {
+    MakeAdminInput,
+    MakeGuideInput,
+    SaveUserInput,
+} from "../schemas/user.schemas";
 import UserModel from "../models/user.model";
+import { findUserById } from "../services/user.services";
 
 export const saveUser = async (
     req: Request<object, object, SaveUserInput>,
@@ -11,7 +16,7 @@ export const saveUser = async (
 
         const userInfo = {
             email,
-            name: name || email.split("@")[0],
+            name: name ?? email.split("@")[0],
         };
 
         const user = await UserModel.create(userInfo);
@@ -56,6 +61,72 @@ export const getAllUsers = async (req: Request, res: Response) => {
         });
     } catch (error) {
         console.error("error during get all users: \n", error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+};
+
+export const makeAdmin = async (
+    req: Request<MakeAdminInput>,
+    res: Response
+) => {
+    try {
+        const { id } = req.params;
+
+        const user = await findUserById(id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "user not found",
+            });
+        }
+
+        user.role = "admin";
+
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "success",
+        });
+    } catch (error) {
+        console.error("error during make admin: \n", error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+};
+
+export const makeGuide = async (
+    req: Request<MakeGuideInput>,
+    res: Response
+) => {
+    try {
+        const { id } = req.params;
+
+        const user = await findUserById(id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "user not found",
+            });
+        }
+
+        user.role = "guide";
+
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "success",
+        });
+    } catch (error) {
+        console.error("error during make guide: \n", error);
         res.status(500).json({
             success: false,
             message: "Internal server error",

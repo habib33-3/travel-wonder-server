@@ -13,3 +13,25 @@ export const saveUserSchema = object({
 });
 
 export type SaveUserInput = TypeOf<typeof saveUserSchema>["body"];
+
+export const makeAdminSchema = object({
+    params: object({
+        id: string({
+            required_error: "id is required",
+        }),
+    }),
+});
+
+
+export type MakeAdminInput = TypeOf<typeof makeAdminSchema>["params"];
+
+export const makeGuideSchema = object({
+    params: object({
+        id: string({
+            required_error: "id is required",
+        }),
+    }),
+});
+
+
+export type MakeGuideInput = TypeOf<typeof makeGuideSchema>["params"];
