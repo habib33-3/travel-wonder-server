@@ -1,9 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { accessToken } from "../env";
 
-interface ExtendedRequest extends Request {
-    user?: jwt.JwtPayload;
+export interface ExtendedRequest extends Request {
+    user?: {
+        email?: string;
+        role?: string;
+    };
 }
 
 const verifyJWT = (req: ExtendedRequest, res: Response, next: NextFunction) => {
@@ -14,8 +17,14 @@ const verifyJWT = (req: ExtendedRequest, res: Response, next: NextFunction) => {
     }
 
     try {
-        const decoded = jwt.verify(token, accessToken) as jwt.JwtPayload;
-        req.user = decoded;
+        const decoded: JwtPayload = jwt.verify(
+            token,
+            accessToken
+        ) as JwtPayload;
+        req.user = {
+            email: decoded.email,
+            role: decoded.role,
+        };
         next();
     } catch (err) {
         if (err instanceof jwt.TokenExpiredError) {
