@@ -40,3 +40,29 @@ export const makeGuideSchema = object({
 });
 
 export type MakeGuideInput = TypeOf<typeof makeGuideSchema>["params"];
+
+export const checkAdminSchema = object({
+    params: object({
+        email: string({
+            required_error: "email is required",
+            invalid_type_error: "email must be string",
+        }).email({
+            message: "valid email required",
+        }),
+    }),
+});
+
+export type CheckAdminInput = TypeOf<typeof checkAdminSchema>["params"];
+
+export const checkGuideSchema = object({
+    params: object({
+        email: string({
+            required_error: "email is required",
+            invalid_type_error: "email must be string",
+        }).email({
+            message: "valid email required",
+        }),
+    }),
+});
+
+export type CheckGuideInput = TypeOf<typeof checkGuideSchema>["params"];

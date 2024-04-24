@@ -23,3 +23,21 @@ export const addCategoryHandler = async (
         });
     }
 };
+
+export const getAllCategoriesHandler = async (req: Request, res: Response) => {
+    try {
+        const categories = await CategoryModel.find();
+
+        res.status(200).json({
+            success: true,
+            message: "catagories loaded",
+            categories,
+        });
+    } catch (error: any) {
+        console.log(error.message);
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong",
+        });
+    }
+};

@@ -21,6 +21,17 @@ const verifyJWT = (req: ExtendedRequest, res: Response, next: NextFunction) => {
             token,
             accessToken
         ) as JwtPayload;
+
+        const tokenEmail = decoded.email;
+        const paramEmail = req.params?.email;
+
+        if (paramEmail && tokenEmail !== paramEmail) {
+            return res.status(401).json({
+                message:
+                    "Unauthorized: Token email does not match request email",
+            });
+        }
+
         req.user = {
             email: decoded.email,
             role: decoded.role,

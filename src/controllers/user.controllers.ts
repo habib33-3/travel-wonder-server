@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
 import {
+    CheckAdminInput,
+    CheckGuideInput,
     MakeAdminInput,
     MakeGuideInput,
     SaveUserInput,
 } from "../schemas/user.schemas";
 import UserModel from "../models/user.model";
-import { findUserById } from "../services/user.services";
+import { findUserByEmail, findUserById } from "../services/user.services";
 
 export const saveUser = async (
     req: Request<object, object, SaveUserInput>,
@@ -127,6 +129,70 @@ export const makeGuide = async (
         });
     } catch (error) {
         console.error("error during make guide: \n", error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+};
+
+export const checkAdminHandler = async (
+    req: Request<CheckAdminInput>,
+    res: Response
+) => {
+    try {
+        const { email } = req.params;
+
+        const user = await findUserByEmail(email);
+
+        if (!user) {
+            res.status(404).json({
+                success: false,
+                message: "user not found",
+            });
+        }
+
+        const admin = user?.role === "admin";
+
+        res.status(200).json({
+            success: true,
+            message: "success",
+            admin,
+        });
+    } catch (error: any) {
+        console.error("error during check admin: \n", error.message);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+};
+
+export const checkGuideHandler = async (
+    req: Request<CheckGuideInput>,
+    res: Response
+) => {
+    try {
+        const { email } = req.params;
+
+        const user = await findUserByEmail(email);
+
+        if (!user) {
+            res.status(404).json({
+                success: false,
+                message: "user not found",
+            });
+        }
+
+        const guide = user?.role === "guide";
+
+        res.status(200).json({
+            success: true,
+            message: "success",
+            guide,
+        });
+    } catch (error: any) {
+        console.error("error during check guide: \n", error.message);
         res.status(500).json({
             success: false,
             message: "Internal server error",
