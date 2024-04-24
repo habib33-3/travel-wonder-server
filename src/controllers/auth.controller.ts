@@ -15,7 +15,7 @@ export const createToken = async (
         }
 
         const token = jwt.sign({ email, role }, accessToken, {
-            expiresIn: "3h",
+            expiresIn: process.env.NODE_ENV === "production" ? "24h" : "30d",
         });
 
         return res

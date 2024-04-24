@@ -13,51 +13,52 @@ import {
         allowMixed: Severity.ALLOW,
     },
 })
-
-export class Tour {
+export class Guide {
     @prop({
         required: true,
     })
-    name!: string;
+    name: string;
 
     @prop({
         required: true,
+        unique: true,
+        lowercase: true,
     })
-    thumbnail!: string;
-
-    @prop({
-        required: true,
-    })
-    category!: string;
+    email: string;
 
     @prop({
         required: true,
     })
-    categoryId!: string;
-
-    @prop({
-        required: true,
-    })
-    description!: string;
+    pic: string;
 
     @prop({
         required: true,
         type: () => [String],
     })
-    images!: string[];
+    skills: string[];
 
     @prop({
         required: true,
         type: () => [String],
     })
-    activities!: string[];
+    language: string[];
 
     @prop({
         required: true,
     })
-    price!: number;
+    phone: string;
+
+    @prop({
+        required: true,
+    })
+    education: string;
+
+    @prop({
+        required: true,
+    })
+    experience: string;
 }
 
-const TourModel = getModelForClass(Tour);
+const GuideModel = getModelForClass(Guide);
 
-export default TourModel;
+export default GuideModel;
