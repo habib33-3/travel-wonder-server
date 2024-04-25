@@ -5,6 +5,7 @@ import categoryRouter from "./category.routes";
 import tourRouter from "./tour.routes";
 import guideRouter from "./guide.routes";
 import reviewRouter from "./review.routes";
+import bookingRouter from "./booking.routes";
 
 const router = Router();
 
@@ -14,6 +15,7 @@ router.use(categoryRouter);
 router.use(tourRouter);
 router.use(guideRouter);
 router.use(reviewRouter);
+router.use(bookingRouter);
 
 router.get("/api/health", async (_, res) => {
     res.send("server running");
