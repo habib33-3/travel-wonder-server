@@ -13,6 +13,7 @@ import {
         allowMixed: Severity.ALLOW,
     },
 })
+
 export class Booking {
     @prop({
         required: true,
