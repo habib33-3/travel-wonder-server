@@ -5,12 +5,12 @@ import { clearToken, createToken } from "../controllers/auth.controller";
 
 const router = Router();
 
-router.get(
+router.post(
     "/api/v1/auth/createToken",
     validateInput(createTokenSchema),
     createToken
 );
 
-router.get("/api/v1/auth/logout", clearToken);
+router.post("/api/v1/auth/logout", clearToken);
 
 export default router;
