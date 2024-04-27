@@ -13,13 +13,13 @@ app.use(cookieParser());
 
 app.use(morgan("combined"));
 
-app.use(router);
-
 app.use(
     cors({
         origin: [devClient, prodClient],
         credentials: true,
     })
 );
+
+app.use(router);
 
 export default app;

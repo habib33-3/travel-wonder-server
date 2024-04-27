@@ -11,6 +11,10 @@ import blogRouter from "./blog.routes";
 
 const router = Router();
 
+router.get("/api/health", async (req, res) => {
+    res.send("server running|");
+});
+
 router.use(userRouter);
 router.use(authRouter);
 router.use(categoryRouter);
@@ -20,9 +24,5 @@ router.use(reviewRouter);
 router.use(bookingRouter);
 router.use(wishlistRouter);
 router.use(blogRouter);
-
-router.get("/api/health", async (_, res) => {
-    res.send("server running");
-});
 
 export default router;
