@@ -22,4 +22,8 @@ app.use(
 
 app.use(router);
 
+app.get("/", (req, res) => {
+    res.send("Travel Wonder");
+});
+
 export default app;
