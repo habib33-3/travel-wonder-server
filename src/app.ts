@@ -11,15 +11,18 @@ app.use(json());
 
 app.use(cookieParser());
 
-app.use(morgan("combined"));
+// app.use(morgan("combined"));
+
+// app.use(
+//     cors({
+//         origin: [devClient, prodClient],
+//         credentials: true,
+//     })
+// );
 
 app.use(router);
 
-app.use(
-    cors({
-        origin: [devClient, prodClient],
-        credentials: true,
-    })
-);
-
+app.get("/", (req, res) => {
+    res.send("travel wonder");
+});
 export default app;

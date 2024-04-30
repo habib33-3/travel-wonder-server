@@ -1,5 +1,5 @@
-import { TypeOf } from "Zod";
-import { object, string } from "zod";
+
+import { object, string,TypeOf } from "zod";
 
 export const createTokenSchema = object({
     body: object({
