@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { connectDB } from "./config/db.config";
 
-connectDB().catch((err) => {
-    console.error("Error starting express server:", err);
+connectDB().catch((error: any) => {
+    console.error("Error starting express server:", error.message);
     process.exit(1);
 });

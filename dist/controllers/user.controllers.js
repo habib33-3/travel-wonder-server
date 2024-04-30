@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -15,14 +6,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkGuideHandler = exports.checkAdminHandler = exports.makeGuide = exports.makeAdmin = exports.getAllUsers = exports.saveUser = void 0;
 const user_model_1 = __importDefault(require("../models/user.model"));
 const user_services_1 = require("../services/user.services");
-const saveUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const saveUser = async (req, res) => {
     try {
         const { email, name } = req.body;
         const userInfo = {
             email,
             name: name !== null && name !== void 0 ? name : email.split("@")[0],
         };
-        const user = yield user_model_1.default.create(userInfo);
+        const user = await user_model_1.default.create(userInfo);
         if (user) {
             res.status(201).json({
                 success: true,
@@ -45,11 +36,11 @@ const saveUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             });
         }
     }
-});
+};
 exports.saveUser = saveUser;
-const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllUsers = async (req, res) => {
     try {
-        const users = yield user_model_1.default.find();
+        const users = await user_model_1.default.find();
         if (!users) {
             res.status(404).json({
                 success: false,
@@ -69,12 +60,12 @@ const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             message: "Internal server error",
         });
     }
-});
+};
 exports.getAllUsers = getAllUsers;
-const makeAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const makeAdmin = async (req, res) => {
     try {
         const { id } = req.params;
-        const user = yield (0, user_services_1.findUserById)(id);
+        const user = await (0, user_services_1.findUserById)(id);
         if (!user) {
             return res.status(404).json({
                 success: false,
@@ -82,7 +73,7 @@ const makeAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             });
         }
         user.role = "admin";
-        yield user.save();
+        await user.save();
         return res.status(200).json({
             success: true,
             message: "success",
@@ -95,12 +86,12 @@ const makeAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             message: "Internal server error",
         });
     }
-});
+};
 exports.makeAdmin = makeAdmin;
-const makeGuide = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const makeGuide = async (req, res) => {
     try {
         const { id } = req.params;
-        const user = yield (0, user_services_1.findUserById)(id);
+        const user = await (0, user_services_1.findUserById)(id);
         if (!user) {
             return res.status(404).json({
                 success: false,
@@ -108,7 +99,7 @@ const makeGuide = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             });
         }
         user.role = "guide";
-        yield user.save();
+        await user.save();
         return res.status(200).json({
             success: true,
             message: "success",
@@ -121,12 +112,12 @@ const makeGuide = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             message: "Internal server error",
         });
     }
-});
+};
 exports.makeGuide = makeGuide;
-const checkAdminHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const checkAdminHandler = async (req, res) => {
     try {
         const { email } = req.params;
-        const user = yield (0, user_services_1.findUserByEmail)(email);
+        const user = await (0, user_services_1.findUserByEmail)(email);
         if (!user) {
             res.status(404).json({
                 success: false,
@@ -147,12 +138,12 @@ const checkAdminHandler = (req, res) => __awaiter(void 0, void 0, void 0, functi
             message: "Internal server error",
         });
     }
-});
+};
 exports.checkAdminHandler = checkAdminHandler;
-const checkGuideHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const checkGuideHandler = async (req, res) => {
     try {
         const { email } = req.params;
-        const user = yield (0, user_services_1.findUserByEmail)(email);
+        const user = await (0, user_services_1.findUserByEmail)(email);
         if (!user) {
             res.status(404).json({
                 success: false,
@@ -173,5 +164,5 @@ const checkGuideHandler = (req, res) => __awaiter(void 0, void 0, void 0, functi
             message: "Internal server error",
         });
     }
-});
+};
 exports.checkGuideHandler = checkGuideHandler;

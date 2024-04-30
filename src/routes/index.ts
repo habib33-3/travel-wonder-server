@@ -11,6 +11,10 @@ import blogRouter from "./blog.routes";
 
 const router = Router();
 
+router.get("/", (req, res) => {
+    res.send("travel wonder");
+});
+
 router.get("/api/health", async (req, res) => {
     res.send("server running|");
 });
