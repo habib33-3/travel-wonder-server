@@ -13,7 +13,7 @@ const validateInput =
 
             next();
         } catch (error) {
-            return res.status(400).send("validation failed");
+            return res.status(400).send(`Validation Error: ${error.message}`);
         }
     };
 

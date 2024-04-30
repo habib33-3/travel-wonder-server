@@ -11,14 +11,14 @@ app.use(json());
 
 app.use(cookieParser());
 
-// app.use(morgan("combined"));
+app.use(morgan("combined"));
 
-// app.use(
-//     cors({
-//         origin: [devClient, prodClient],
-//         credentials: true,
-//     })
-// );
+app.use(
+    cors({
+        origin: [devClient, prodClient],
+        credentials: true,
+    })
+);
 
 app.use(router);
 
