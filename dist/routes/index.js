@@ -15,7 +15,7 @@ const wishlist_routes_1 = __importDefault(require("./wishlist.routes"));
 const blog_routes_1 = __importDefault(require("./blog.routes"));
 const router = (0, express_1.Router)();
 router.get("/", (req, res) => {
-    res.send("travel wonder");
+    res.send("Travel Wonder");
 });
 router.get("/api/health", async (req, res) => {
     res.send("server running|");

@@ -12,7 +12,7 @@ import blogRouter from "./blog.routes";
 const router = Router();
 
 router.get("/", (req, res) => {
-    res.send("travel wonder");
+    res.send("Travel Wonder");
 });
 
 router.get("/api/health", async (req, res) => {
