@@ -12,7 +12,7 @@ const validateInput =
             });
 
             next();
-        } catch (error) {
+        } catch (error: any) {
             return res.status(400).send(`Validation Error: ${error.message}`);
         }
     };
