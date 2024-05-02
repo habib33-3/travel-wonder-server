@@ -13,14 +13,20 @@ app.use(cookieParser());
 
 app.use(morgan("combined"));
 
+const allowedOrigins: (string | RegExp)[] = [
+    process.env.DEV_CLIENT || "", // Provide a default value to avoid undefined
+    process.env.PROD_CLIENT || "", // Provide a default value to avoid undefined
+    "http://localhost:5173",
+    "https://travel-wonder-client.vercel.app",
+];
+
 app.use(
     cors({
-        origin: [devClient, prodClient],
+        origin: allowedOrigins,
         credentials: true,
     })
 );
 
 app.use(router);
-
 
 export default app;

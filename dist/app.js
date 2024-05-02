@@ -29,15 +29,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importStar(require("express"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
-const env_1 = require("./env");
 const morgan_1 = __importDefault(require("morgan"));
 const routes_1 = __importDefault(require("./routes"));
 const app = (0, express_1.default)();
 app.use((0, express_1.json)());
 app.use((0, cookie_parser_1.default)());
 app.use((0, morgan_1.default)("combined"));
+const allowedOrigins = [
+    process.env.DEV_CLIENT || "", // Provide a default value to avoid undefined
+    process.env.PROD_CLIENT || "", // Provide a default value to avoid undefined
+    "http://localhost:5173",
+    "https://travel-wonder-client.vercel.app",
+];
 app.use((0, cors_1.default)({
-    origin: [env_1.devClient, env_1.prodClient],
+    origin: allowedOrigins,
     credentials: true,
 }));
 app.use(routes_1.default);
