@@ -1,5 +1,3 @@
-
-
 # Exit on errors
 set -e
 

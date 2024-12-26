@@ -1,33 +1,33 @@
 {
-  "trailingComma": "es5",
-  "tabWidth": 4,
-  "semi": true,
-  "singleQuote": false,
-  "bracketSpacing": true,
-  "bracketSameLine": false,
-  "arrowParens": "always",
-  "importOrder": [
-    "^node:(.*)$",
-    "^(fs|path|os)(.*)$",
-    "^@nestjs/(.*)$",
-    "<THIRD_PARTY_MODULES>",
-    "^src/(.*)$",
-    "^[./]"
-  ],
-  "importOrderSeparation": true,
-  "importOrderSortSpecifiers": true,
-  "plugins": [
-    "@trivago/prettier-plugin-sort-imports",
-    "prettier-plugin-packagejson"
-  ],
-  "parser": "typescript",
-  "importOrderParserPlugins": ["typescript", "decorators-legacy"],
-  "overrides": [
-    {
-      "files": "*.json",
-      "options": {
-        "parser": "json"
-      }
-    }
-  ]
+    "trailingComma": "es5",
+    "tabWidth": 4,
+    "semi": true,
+    "singleQuote": false,
+    "bracketSpacing": true,
+    "bracketSameLine": false,
+    "arrowParens": "always",
+    "importOrder": [
+        "^node:(.*)$",
+        "^(fs|path|os)(.*)$",
+        "^@nestjs/(.*)$",
+        "<THIRD_PARTY_MODULES>",
+        "^src/(.*)$",
+        "^[./]"
+    ],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true,
+    "plugins": [
+        "@trivago/prettier-plugin-sort-imports",
+        "prettier-plugin-packagejson"
+    ],
+    "parser": "typescript",
+    "importOrderParserPlugins": ["typescript", "decorators-legacy"],
+    "overrides": [
+        {
+            "files": "*.json",
+            "options": {
+                "parser": "json"
+            }
+        }
+    ]
 }
