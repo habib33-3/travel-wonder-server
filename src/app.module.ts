@@ -8,6 +8,7 @@ import { AppService } from "./app.service";
 import { CustomLoggerService } from "./custom-logger/custom-logger.service";
 import { AllExceptionsFilter } from "./filters/all-exceptions.filter";
 import { PrismaModule } from "./prisma/prisma.module";
+import { UserModule } from "./user/user.module";
 
 @Module({
     imports: [
@@ -21,6 +22,7 @@ import { PrismaModule } from "./prisma/prisma.module";
         ConfigModule.forRoot({
             isGlobal: true,
         }),
+        UserModule,
     ],
     controllers: [AppController],
     providers: [
