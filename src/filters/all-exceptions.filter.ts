@@ -18,7 +18,7 @@ type MyResponseObj = {
     statusCode: number;
     timestamp: string;
     path: string;
-    response: string | object;
+    response: string;
     errorId?: string;
 };
 
@@ -41,15 +41,40 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
         // Handle known HTTP exceptions
         if (exception instanceof HttpException) {
             myResponseObj.statusCode = exception.getStatus();
-            myResponseObj.response = exception.getResponse();
+            const exceptionResponse = exception.getResponse();
+            myResponseObj.response =
+                typeof exceptionResponse === "string"
+                    ? exceptionResponse
+                    : JSON.stringify(exceptionResponse);
         }
-        // Handle Prisma errors
+        // Handle Prisma validation errors
         else if (exception instanceof PrismaClientValidationError) {
             myResponseObj.statusCode = 422;
-            myResponseObj.response = exception.message.replaceAll(/\n/g, " ");
-        } else if (exception instanceof PrismaClientKnownRequestError) {
+            myResponseObj.response = exception.message.replace(/\n/g, " ");
+        }
+        // Handle Prisma known request errors
+        else if (exception instanceof PrismaClientKnownRequestError) {
             myResponseObj.statusCode = 400;
-            myResponseObj.response = exception.message;
+
+            switch (exception.code) {
+                case "P2002":
+                    myResponseObj.response =
+                        "Unique constraint failed on the field(s): " +
+                        this.formatPrismaMeta(exception.meta);
+                    break;
+                case "P2003":
+                    myResponseObj.response =
+                        "Foreign key constraint failed on the field(s): " +
+                        this.formatPrismaMeta(exception.meta);
+                    break;
+                case "P2025":
+                    myResponseObj.response =
+                        "An operation failed because a required record was not found.";
+                    break;
+                default:
+                    myResponseObj.response = exception.message;
+                    break;
+            }
         }
         // Handle general errors
         else {
@@ -59,7 +84,10 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
             if (process.env.NODE_ENV === "production") {
                 myResponseObj.response = "Internal Server Error";
             } else {
-                myResponseObj.response = exception as string;
+                myResponseObj.response =
+                    exception instanceof Error
+                        ? `${exception.name}: ${exception.message}`
+                        : JSON.stringify(exception);
             }
         }
 
@@ -70,7 +98,7 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
 
         response.status(myResponseObj.statusCode).json(myResponseObj);
 
-        // Log error using MyLoggerService (Ensure response is a string)
+        // Log error using CustomLoggerService
         const responseString = this.formatExceptionForLogging(
             myResponseObj.response,
         );
@@ -82,17 +110,21 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
 
     // Optional: Generate a unique error ID for tracing errors
     private generateErrorId(): string {
-        return "error_" + Math.random().toString(36).substring(2, 15);
+        return "error_" + (Math.random() * 1e9).toString(36);
     }
 
     // Format exception for logging (to avoid '[object Object]' stringification)
     private formatExceptionForLogging(exception: string | object): string {
-        if (exception instanceof Error) {
-            return `${exception.name}: ${exception.message}\n${exception.stack}`;
-        }
         if (typeof exception === "object") {
             return JSON.stringify(exception, null, 2); // Pretty-print object errors
         }
         return exception.toString();
+    }
+
+    // Format Prisma error metadata
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private formatPrismaMeta(meta: any): string {
+        if (!meta) return "Unknown fields";
+        return Object.values(meta).join(", ");
     }
 }

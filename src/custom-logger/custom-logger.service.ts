@@ -4,33 +4,62 @@ import { Injectable, Logger } from "@nestjs/common";
 export class CustomLoggerService {
     private readonly logger = new Logger(CustomLoggerService.name);
 
-    log(message: string) {
-        this.logger.log(message);
-    }
+    log(message: string, context?: string) {
+        const timestamp = new Date().toISOString();
+        const safeContext = context ?? "General";
 
-    error(message: string, context?: string, stack?: string) {
-        // Fallbacks for undefined values
-        const safeContext = context ?? "Unknown Context";
-        const safeStack = stack ?? "No stack trace available";
-
-        if (process.env.NODE_ENV === "production") {
-            // Log error without stack trace in production
-            this.logger.error(message, safeContext);
+        if (typeof message === "object") {
+            const formattedMessage = JSON.stringify(message, null, 2); // Pretty print the object
+            this.logger.log(
+                `[${timestamp}] [${safeContext}]\nResponse:\n${formattedMessage}`,
+            );
         } else {
-            // Log error with stack trace in development
-            this.logger.error(message, safeStack, safeContext);
+            this.logger.log(`[${timestamp}] [${safeContext}] ${message}`);
         }
     }
 
-    warn(message: string) {
-        this.logger.warn(message);
+    error(message: string | object, context?: string, stack?: string) {
+        const timestamp = new Date().toISOString();
+        const safeContext = context ?? "Unknown Context";
+        const safeStack = stack ?? "No stack trace available";
+
+        if (typeof message === "object") {
+            const formattedMessage = JSON.stringify(message, null, 2); // Pretty print the object
+            if (process.env.NODE_ENV === "production") {
+                this.logger.error(
+                    `[${timestamp}] [${safeContext}]\nResponse:\n${formattedMessage}`,
+                );
+            } else {
+                this.logger.error(
+                    `[${timestamp}] [${safeContext}]\nResponse:\n${formattedMessage}`,
+                    safeStack,
+                );
+            }
+        } else if (process.env.NODE_ENV === "production") {
+            this.logger.error(`[${timestamp}] [${safeContext}] ${message}`);
+        } else {
+            this.logger.error(
+                `[${timestamp}] [${safeContext}] ${message}`,
+                safeStack,
+            );
+        }
     }
 
-    debug(message: string) {
-        this.logger.debug(message);
+    warn(message: string, context?: string) {
+        const timestamp = new Date().toISOString();
+        const safeContext = context ?? "General";
+        this.logger.warn(`[${timestamp}] [${safeContext}] ${message}`);
     }
 
-    verbose(message: string) {
-        this.logger.verbose(message);
+    debug(message: string, context?: string) {
+        const timestamp = new Date().toISOString();
+        const safeContext = context ?? "General";
+        this.logger.debug(`[${timestamp}] [${safeContext}] ${message}`);
+    }
+
+    verbose(message: string, context?: string) {
+        const timestamp = new Date().toISOString();
+        const safeContext = context ?? "General";
+        this.logger.verbose(`[${timestamp}] [${safeContext}] ${message}`);
     }
 }
