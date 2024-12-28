@@ -1,10 +1,11 @@
+/* eslint-disable no-magic-numbers */
 import { Injectable, Logger } from "@nestjs/common";
 
 @Injectable()
 export class CustomLoggerService {
     private readonly logger = new Logger(CustomLoggerService.name);
 
-    log(message: string, context?: string) {
+    public log(message: string, context?: string) {
         const timestamp = new Date().toISOString();
         const safeContext = context ?? "General";
 
@@ -18,7 +19,7 @@ export class CustomLoggerService {
         }
     }
 
-    error(message: string | object, context?: string, stack?: string) {
+    public error(message: string | object, context?: string, stack?: string) {
         const timestamp = new Date().toISOString();
         const safeContext = context ?? "Unknown Context";
         const safeStack = stack ?? "No stack trace available";
@@ -45,13 +46,13 @@ export class CustomLoggerService {
         }
     }
 
-    warn(message: string, context?: string) {
+    public warn(message: string, context?: string) {
         const timestamp = new Date().toISOString();
         const safeContext = context ?? "General";
         this.logger.warn(`[${timestamp}] [${safeContext}] ${message}`);
     }
 
-    debug(message: string, context?: string) {
+    public debug(message: string, context?: string) {
         const timestamp = new Date().toISOString();
         const safeContext = context ?? "General";
         this.logger.debug(`[${timestamp}] [${safeContext}] ${message}`);

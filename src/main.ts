@@ -37,6 +37,7 @@ async function bootstrap() {
     });
 
     // Start the application
+    // eslint-disable-next-line no-magic-numbers
     await app.listen(env.PORT ?? 5000);
 }
-bootstrap();
+void bootstrap();

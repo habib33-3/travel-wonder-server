@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 import {
     ArgumentsHost,
     Catch,
@@ -99,11 +100,8 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
         response.status(myResponseObj.statusCode).json(myResponseObj);
 
         // Log error using CustomLoggerService
-        const responseString = this.formatExceptionForLogging(
-            myResponseObj.response,
-        );
-
-        this.logger.error(responseString, AllExceptionsFilter.name);
+        const logMessage = this.formatExceptionForLogging(myResponseObj);
+        this.logger.error(logMessage, AllExceptionsFilter.name);
 
         super.catch(exception, host);
     }
@@ -114,11 +112,18 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
     }
 
     // Format exception for logging (to avoid '[object Object]' stringification)
-    private formatExceptionForLogging(exception: string | object): string {
-        if (typeof exception === "object") {
-            return JSON.stringify(exception, null, 2); // Pretty-print object errors
-        }
-        return exception.toString();
+    private formatExceptionForLogging(responseObj: MyResponseObj): string {
+        return JSON.stringify(
+            {
+                statusCode: responseObj.statusCode,
+                errorId: responseObj.errorId,
+                timestamp: responseObj.timestamp,
+                path: responseObj.path,
+                response: responseObj.response,
+            },
+            null,
+            2,
+        ); // Pretty-print for better readability
     }
 
     // Format Prisma error metadata

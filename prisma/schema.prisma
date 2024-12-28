@@ -20,7 +20,7 @@ enum Role {
 }
 
 model User {
-  id         String  @id @default(cuid())
+  userId     String  @id @default(cuid())
   name       String
   email      String  @unique
   photo      String? @default("https://avatar.iran.liara.run/public/10")
@@ -29,6 +29,22 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Guide     Guide?
 
   @@map("users")
+}
+
+model Guide {
+  guideId  String   @id @default(cuid())
+  language String[]
+  skills   String[]
+  bio      String
+  address  String
+  phone    String
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [userId])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
