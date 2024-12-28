@@ -35,23 +35,28 @@ export class UserService {
         }
     }
 
+    // Helper function to create a new user
+    private async createNewUser(userDto: SaveUserDto | CreateGuideDto) {
+        return await this.prisma.user.create({
+            data: {
+                email: userDto.email,
+                firebaseId: userDto.firebaseId,
+                name: userDto.name,
+                photo: userDto.photo,
+            },
+        });
+    }
+
     // Create a new user
     async createUser(user: SaveUserDto) {
         try {
             await this.ensureUserDoesNotExist(user.email);
 
-            return await this.prisma.user.create({
-                data: {
-                    email: user.email,
-                    firebaseId: user.firebaseId,
-                    name: user.name,
-                    photo: user.photo,
-                },
-            });
+            return await this.createNewUser(user); // Reuse the helper method
         } catch (error) {
             this.log.error(error.message);
             if (error instanceof BadRequestException) {
-                throw error; // Rethrow BadRequestException if user already exists
+                throw error;
             }
             throw new InternalServerErrorException("Error creating user");
         }
@@ -63,13 +68,7 @@ export class UserService {
             await this.ensureUserDoesNotExist(guideInfo.email);
 
             return await this.prisma.$transaction(async (tx) => {
-                const user = await tx.user.create({
-                    data: {
-                        email: guideInfo.email,
-                        firebaseId: guideInfo.firebaseId,
-                        name: guideInfo.name,
-                    },
-                });
+                const user = await this.createNewUser(guideInfo); // Reuse the helper method
 
                 return await tx.guide.create({
                     data: {
@@ -85,7 +84,7 @@ export class UserService {
         } catch (error) {
             this.log.error(error.message);
             if (error instanceof BadRequestException) {
-                throw error; // Rethrow BadRequestException if user already exists
+                throw error;
             }
             throw new InternalServerErrorException("Error creating guide");
         }
@@ -95,6 +94,31 @@ export class UserService {
     async findUserByEmail(email: string) {
         try {
             return await this.prisma.user.findUnique({ where: { email } });
+        } catch (error) {
+            this.log.error(error.message);
+            throw new InternalServerErrorException("Error finding user");
+        }
+    }
+
+    // Create an admin
+    async createAdmin(userId: string) {
+        try {
+            return await this.prisma.user.update({
+                where: { userId },
+                data: {
+                    role: "ADMIN", // Ensure roles are defined in your database schema
+                },
+            });
+        } catch (error) {
+            this.log.error(error.message);
+            throw new InternalServerErrorException("Error creating admin");
+        }
+    }
+
+    // Find a user by their userId
+    async findUserById(userId: string) {
+        try {
+            return await this.prisma.user.findUnique({ where: { userId } });
         } catch (error) {
             this.log.error(error.message);
             throw new InternalServerErrorException("Error finding user");
